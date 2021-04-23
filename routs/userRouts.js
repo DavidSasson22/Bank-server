@@ -1,5 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const userControler = require('../controllers/userControllers');
+const user = require('../controllers/userControllers');
 
 
+router.get('/:id',(req,res) => user.getUser(req,res));
+router.patch('/:id', (req, res) => user.updateUser(req, res));
+
+module.exports = router;

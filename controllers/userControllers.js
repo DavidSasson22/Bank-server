@@ -1,10 +1,13 @@
 const User = require('../models/userScheme');
 
 
-const deleteUserAcount = async (req, res) => {
+const getUser = async (req, res) => {
+  console.log(`getUser activated`);
+  console.log(req.params);
+  const _id = req.params.id
   try {
-    const user = await User.findOneAndDelete({user_id: req.params.user_id});
-    return user ? res.send(user) :  res.status(404).send();
+    const user = await User.findById(_id);
+    user ? res.status(200).send(user) : res.status(404).send();
   }
   catch (e) {
     res.status(500).send()
@@ -12,6 +15,26 @@ const deleteUserAcount = async (req, res) => {
 }
 
 
+const updateUser = async (req, res) => {
+  const updates = Object.keys(req.body);
+  const allowedUpdates = ['isActive', 'cash', 'credit', 'history'];
+  const isValidOperation = updates.every((update) => allowedUpdates.includes(update));
+
+  if (!isValidOperation) {
+    return res.status(400).send({ error: 'Invalid updates!' })
+  }
+
+  try {
+    const user = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true })
+    user ? res.status(200).send(user) : res.status(404).send();
+  } 
+  catch (e) {
+    res.status(400).send(e)
+  }
+}
+
+
 module.exports = {
-  deleteUserAcount,
+  getUser,
+  updateUser,
 }

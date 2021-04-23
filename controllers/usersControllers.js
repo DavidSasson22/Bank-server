@@ -1,5 +1,4 @@
 const User = require('../models/userScheme');
-const express = require('express');
 
 
 const createNewUser = async (req, res) => {
